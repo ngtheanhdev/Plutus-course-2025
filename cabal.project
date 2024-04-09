@@ -19,8 +19,8 @@ index-state:
 
 packages: 
     Utilities
-    Lecture05
-    Lecture06
+    Module05
+    Module06
 
 -- We never, ever, want this.
 write-ghc-environment-files: never
