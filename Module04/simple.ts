@@ -9,7 +9,7 @@ import { Blockfrost, Lucid } from "https://deno.land/x/lucid/mod.ts";
 
 const lucid = await Lucid.new(
     new Blockfrost(
-        "https://cardano-preview.blockfrost.io/api/v0", "preview4QbiejGzlyhUgfvyXZNf8lDEIFjCHjP0",
+        "https://cardano-preview.blockfrost.io/api/v0", "preview4QbiejGzZNf8lDEIFjlyhUgfvyXCHjP0",
     ),
     "Preview",
 );
@@ -19,7 +19,7 @@ const lucid = await Lucid.new(
 // console.log(privateKey);
 // lucid.selectWalletFromPrivateKey(privateKey);
 
-const Alice = "leisure come endorse situate perfect slender helmet pond next host mean great program antenna ecology used scheme indoor various conduct border swamp spread spin"
+const Alice = "leisure come endorse situate perfect conduct border swamp spread host mean great program antenna ecology used scheme  slender helmet pond next indoor various  spin"
 
 
 lucid.selectWalletFromSeed(Alice);
