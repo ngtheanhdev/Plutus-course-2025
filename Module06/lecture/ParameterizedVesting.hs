@@ -58,7 +58,7 @@ saveVal = writeValidatorToFile "./assets/parameterized-vesting.plutus" . validat
 
 
 saveVal1 :: IO ()
-saveVal1 = writeValidatorToFile "./assets/parameterized-vesting1.plutus" . validator $ VestingParams
+saveVal1 = writeValidatorToFile "/app/Plutus-course-2024/Module06/lecture/parameterized-vesting1.plutus" . validator $ VestingParams
    { beneficiary = "4008f53e5fd3334990961e66420fa072f37ca8d2ba59d1e05bc08c03"
    , deadline    = 19950219
    }
