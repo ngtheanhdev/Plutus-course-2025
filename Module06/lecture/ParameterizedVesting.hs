@@ -1,0 +1,64 @@
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TemplateHaskell       #-}
+
+module ParameterizedVesting where
+
+import           Plutus.V1.Ledger.Interval (contains)
+import           Plutus.V2.Ledger.Api      (BuiltinData, POSIXTime, PubKeyHash,
+                                            ScriptContext (scriptContextTxInfo),
+                                            TxInfo (txInfoValidRange),
+                                            Validator, from, mkValidatorScript)
+import           Plutus.V2.Ledger.Contexts (txSignedBy)
+import           PlutusTx                  (applyCode, compile, liftCode,
+                                            makeLift)
+import           PlutusTx.Prelude          (Bool, traceIfFalse, ($), (&&), (.))
+import           Prelude                   (IO)
+import           Utilities                 (wrapValidator, writeValidatorToFile)
+
+---------------------------------------------------------------------------------------------------
+----------------------------------- ON-CHAIN / VALIDATOR ------------------------------------------
+
+data VestingParams = VestingParams
+    { beneficiary :: PubKeyHash
+    , deadline    :: POSIXTime
+    }
+makeLift ''VestingParams
+
+{-# INLINABLE mkParameterizedVestingValidator #-}
+mkParameterizedVestingValidator :: VestingParams -> () -> () -> ScriptContext -> Bool
+mkParameterizedVestingValidator params () () ctx =
+    traceIfFalse "beneficiary's signature missing" signedByBeneficiary &&
+    traceIfFalse "deadline not reached" deadlineReached
+  where
+    info :: TxInfo
+    info = scriptContextTxInfo ctx
+
+    signedByBeneficiary :: Bool
+    signedByBeneficiary = txSignedBy info $ beneficiary params
+
+    deadlineReached :: Bool
+    deadlineReached = contains (from $ deadline params) $ txInfoValidRange info
+
+{-# INLINABLE  mkWrappedParameterizedVestingValidator #-}
+mkWrappedParameterizedVestingValidator :: VestingParams -> BuiltinData -> BuiltinData -> BuiltinData -> ()
+mkWrappedParameterizedVestingValidator = wrapValidator . mkParameterizedVestingValidator
+
+validator :: VestingParams -> Validator
+validator params = mkValidatorScript ($$(compile [|| mkWrappedParameterizedVestingValidator ||]) `applyCode` liftCode params)
+
+---------------------------------------------------------------------------------------------------
+------------------------------------- HELPER FUNCTIONS --------------------------------------------
+
+saveVal :: VestingParams -> IO ()
+saveVal = writeValidatorToFile "./assets/parameterized-vesting.plutus" . validator
+
+
+saveVal1 :: IO ()
+saveVal1 = writeValidatorToFile "/app/Plutus-course-2024/Module06/lecture/parameterized-vesting1.plutus" . validator $ VestingParams
+   { beneficiary = "4008f53e5fd3334990961e66420fa072f37ca8d2ba59d1e05bc08c03"
+   , deadline    = 19950219
+   }
