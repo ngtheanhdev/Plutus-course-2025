@@ -23,3 +23,6 @@ cabal.project.local~
 .ghc.environment.*
 Module05/assets/tmp
 Module05/assets/*.*
+*/assets/wallets
+*secret.ts
+Module08/assets/native-scripts/tx.*
