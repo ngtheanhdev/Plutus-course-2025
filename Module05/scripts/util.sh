@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ERA=babbage-era
+ERA=conway-era
 NETWORK="testnet-magic 2"
 ASSETS_DIR=./../assets
 

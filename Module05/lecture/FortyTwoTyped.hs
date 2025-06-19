@@ -8,8 +8,7 @@ module FortyTwoTyped where
 
 import qualified Plutus.V2.Ledger.Api as PlutusV2
 import           PlutusTx             (compile)
-import           PlutusTx.Prelude     (Bool, Eq ((==)), Integer, traceIfFalse,
-                                       ($))
+import           PlutusTx.Prelude     (Bool, Eq ((==)), Integer, traceIfFalse, ($))
 import           Prelude              (IO)
 import           Utilities            (wrapValidator, writeValidatorToFile)
 
