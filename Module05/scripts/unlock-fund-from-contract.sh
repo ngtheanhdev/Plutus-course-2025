@@ -80,12 +80,11 @@ TX_RAW_FILE=$TMP_DIR/tx.draft
 TX_SIGNED_FILE=$TMP_DIR/tx.signed
 
 # Get protocol parameters
-PROTOCOL_PARAMS=$ASSETS_DIR/protocol.json
-cardano-cli query protocol-parameters --$NETWORK --out-file $PROTOCOL_PARAMS
+# PROTOCOL_PARAMS=$ASSETS_DIR/protocol.json
+# cardano-cli query protocol-parameters --$NETWORK --out-file $PROTOCOL_PARAMS
 
 # Build transaction
-cardano-cli transaction build \
-    --$ERA \
+cardano-cli latest transaction build \
     --$NETWORK \
     --tx-in $TX_IN_TO_UNLOCK \
     --tx-in-script-file $SCRIPT_FILE \
@@ -93,22 +92,21 @@ cardano-cli transaction build \
     --tx-in-redeemer-file $REDEEMER_FILE \
     --tx-in-collateral $COLLATERAL \
     --change-address $RECEIVER_ADDRESS \
-    --protocol-params-file $PROTOCOL_PARAMS \
     --out-file $TX_RAW_FILE
 
 # Sign transaction
-cardano-cli transaction sign \
+cardano-cli latest transaction sign \
     --tx-body-file $TX_RAW_FILE \
     --$NETWORK \
     --signing-key-file $SKEY \
     --out-file $TX_SIGNED_FILE
 
 # Submit
-cardano-cli transaction submit \
+cardano-cli latest transaction submit \
     --$NETWORK \
     --tx-file $TX_SIGNED_FILE
 
 # Transaction ID
-TID=$(cardano-cli transaction txid --tx-file "$TX_SIGNED_FILE")
+TID=$(cardano-cli latest transaction txid --tx-file "$TX_SIGNED_FILE")
 echo "Transaction id: $TID"
 echo "Cardanoscan: https://preview.cardanoscan.io/transaction/$TID"
