@@ -15,8 +15,7 @@ cardano-cli address build \
     --out-file "$assets/$sm.addr"
 
 # Build the transaction
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli latest transaction build \
     --testnet-magic 2 \
     --tx-in "$txin" \
     --tx-out "$(cat "$assets/$sm.addr") + 12300135 lovelace" \
@@ -25,17 +24,17 @@ cardano-cli transaction build \
     --out-file "$body"
     
 # Sign the transaction
-cardano-cli transaction sign \
+cardano-cli latest transaction sign \
     --tx-body-file "$body" \
     --signing-key-file "$keypath/$name.skey" \
     --testnet-magic 2 \
     --out-file "$tx"
 
 # Submit the transaction
-cardano-cli transaction submit \
+cardano-cli latest transaction submit \
     --testnet-magic 2 \
     --tx-file "$tx"
 
-tid=$(cardano-cli transaction txid --tx-file "$tx")
+tid=$(cardano-cli latest transaction txid --tx-file "$tx")
 echo "transaction id: $tid"
 echo "Cardanoscan: https://preview.cardanoscan.io/transaction/$tid"
