@@ -70,8 +70,7 @@ TX_RAW_FILE=$TMP_DIR/tx.draft
 TX_SIGNED_FILE=$TMP_DIR/tx.signed
 
 # Build transaction
-cardano-cli transaction build \
-    --$ERA \
+cardano-cli latest transaction build \
     --$NETWORK \
     --tx-in $TX_IN \
     --tx-out $CONTRACT_ADDRESS+$LOVELACE_TO_SEND \
@@ -80,18 +79,18 @@ cardano-cli transaction build \
     --out-file $TX_RAW_FILE
 
 # Sign transaction
-cardano-cli transaction sign \
+cardano-cli latest transaction sign \
     --tx-body-file $TX_RAW_FILE \
     --$NETWORK \
     --signing-key-file $SKEY \
     --out-file $TX_SIGNED_FILE
 
 # Submit
-cardano-cli transaction submit \
+cardano-cli latest transaction submit \
     --$NETWORK \
     --tx-file $TX_SIGNED_FILE
 
 # Transaction ID
-TID=$(cardano-cli transaction txid --tx-file "$TX_SIGNED_FILE")
+TID=$(cardano-cli latest transaction txid --tx-file "$TX_SIGNED_FILE")
 echo "Transaction id: $TID"
 echo "Cardanoscan: https://preview.cardanoscan.io/transaction/$TID"

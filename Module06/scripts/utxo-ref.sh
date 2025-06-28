@@ -16,8 +16,7 @@ cardano-cli address build \
     --out-file "$assets/vest.addr"
 
 # Build the transaction
-cardano-cli transaction build \
-    --babbage-era \
+cardano-cli latest transaction build \
     --testnet-magic 2 \
     --tx-in "$txin" \
     --tx-out "$(cat "$assets/vest.addr") + 16345689 lovelace" \
@@ -27,13 +26,13 @@ cardano-cli transaction build \
     --out-file "$body"
     
 # Sign the transaction
-cardano-cli transaction sign \
+cardano-cli latest transaction sign \
     --tx-body-file "$body" \
     --signing-key-file "$keypath/$name.skey" \
     --testnet-magic 2 \
     --out-file "$tx"
 
 # Submit the transaction
-cardano-cli transaction submit \
+cardano-cli latest transaction submit \
     --testnet-magic 2 \
     --tx-file "$tx"
